@@ -1,10 +1,14 @@
+
 mod help;
+
 mod actions;
-use actions::{read_keys, editor_keys::read_spook};
+use actions::{editor_keys::read_spook, 
+    screen_commands::{enter_alt_screen, clear_screen_now}
+};
 
-use help::error::die;
+//use help::error::die;
 
-use crossterm::{ event::Event::*,
+use crossterm::{ //event::Event::*,
     terminal, Result,
 };
 
@@ -12,6 +16,8 @@ use crossterm::{ event::Event::*,
 fn main() -> Result<()> {
     terminal::enable_raw_mode()?;
     loop {
+        enter_alt_screen()?;
+        clear_screen_now()?;
         if read_spook() {
             break;
         }
