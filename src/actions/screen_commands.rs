@@ -2,9 +2,9 @@
 use std::io::{stdout, Write, Stdout};
 
 //extra crate
-use crossterm::{terminal::{Clear, ClearType, EnterAlternateScreen},QueueableCommand, Result, style::Print};
-use crossterm::cursor::{MoveTo};
+use crossterm::{terminal::{Clear, ClearType},QueueableCommand, Result, style::Print};
 use crossterm::cursor;
+
 
 
 pub fn clear_screen_now(stdout: &mut Stdout) -> Result<()> {
