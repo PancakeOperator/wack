@@ -3,7 +3,7 @@ use std::io::{stdout, Write, Stdout};
 
 //extra crate
 use crossterm::event::{KeyEvent, read, KeyModifiers, KeyCode};
-use crossterm::{terminal ,QueueableCommand, Result, cursor, };
+use crossterm::{terminal ,QueueableCommand, Result, cursor, terminal::EnterAlternateScreen};
 use errno::errno;
 use crossterm::event::Event::Key;
 
@@ -37,7 +37,6 @@ impl Editor {
 
     pub fn enter_alt_screen(&mut self) -> Result<()> {
         let mut stdout = stdout();
-        
         self.screen.clear(&mut stdout)?;
         self.screen.draw_row()?;
         stdout.queue(cursor::MoveTo(0,0))?.flush()

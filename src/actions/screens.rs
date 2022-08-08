@@ -31,10 +31,11 @@ impl Screen {
         Ok(())
     }
 
+    
     pub fn clear(&self, stdout: &mut Stdout) -> Result<()> {
         stdout
             .queue(cursor::MoveTo(0,0))?
             .queue(terminal::Clear(terminal::ClearType::All))?
             .flush()
-    }
+    } 
 }
