@@ -2,7 +2,7 @@
 use std::io::{stdout, Write, Stdout};
 
 //extra crate
-use crossterm::{QueueableCommand, Result, style::Print, cursor, terminal};
+use crossterm::{QueueableCommand, Result, style::Print, cursor, terminal, terminal::EnterAlternateScreen};
 
 
 
@@ -27,15 +27,17 @@ impl Screen {
             self.stdout
                 .queue(cursor::MoveTo(0, row))?
                 .queue(Print("~".to_string()))?;
+
         }
         Ok(())
     }
 
     
-    pub fn clear(&self, stdout: &mut Stdout) -> Result<()> {
-        stdout
-            .queue(cursor::MoveTo(0,0))?
+    pub fn clear(&mut self)  -> Result<()> {
+        self.stdout
             .queue(terminal::Clear(terminal::ClearType::All))?
-            .flush()
+            .queue(cursor::MoveTo(0,0))?
+            .flush()?;
+        Ok(())
     } 
 }

@@ -3,7 +3,7 @@ use std::io::{stdout, Write, Stdout};
 
 //extra crate
 use crossterm::event::{KeyEvent, read, KeyModifiers, KeyCode};
-use crossterm::{terminal ,QueueableCommand, Result, cursor, terminal::EnterAlternateScreen};
+use crossterm::{terminal , QueueableCommand, Result, cursor};
 use errno::errno;
 use crossterm::event::Event::Key;
 
@@ -22,7 +22,7 @@ impl Editor {
     pub fn start(&mut self) -> Result<()> {
         terminal::enable_raw_mode()?;
         loop {
-            if self.enter_alt_screen().is_err() {
+            if self.refresh().is_err() {
                 self.die("was not able to enter alternate screen");
             }
             if self.read_spook() {
@@ -34,18 +34,13 @@ impl Editor {
     }
 
    
-
-    pub fn enter_alt_screen(&mut self) -> Result<()> {
-        let mut stdout = stdout();
-        self.screen.clear(&mut stdout)?;
-        self.screen.draw_row()?;
-        stdout.queue(cursor::MoveTo(0,0))?.flush()
-        
+    pub fn refresh(&mut self) -> Result<()> {
+        self.screen.clear()?;
+        self.screen.draw_row()
     }
 
     pub fn die<S: Into<String>>(&mut self, message: S) {
-        let mut stdout = stdout();
-        let _ = self.screen.clear(&mut stdout);
+        let _ = self.screen.clear();
         let _ = terminal::disable_raw_mode();
         eprintln!("{} {}", message.into(), errno());
         std::process::exit(1);
