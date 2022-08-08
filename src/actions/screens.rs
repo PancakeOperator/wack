@@ -2,8 +2,8 @@
 use std::io::{stdout, Write, Stdout};
 
 //extra crate
-use crossterm::{terminal ,QueueableCommand, Result, style::Print, cursor};
-use errno::errno;
+use crossterm::{QueueableCommand, Result, style::Print, cursor, terminal};
+
 
 
 
@@ -29,5 +29,12 @@ impl Screen {
                 .queue(Print("~".to_string()))?;
         }
         Ok(())
+    }
+
+    pub fn clear(&self, stdout: &mut Stdout) -> Result<()> {
+        stdout
+            .queue(cursor::MoveTo(0,0))?
+            .queue(terminal::Clear(terminal::ClearType::All))?
+            .flush()
     }
 }

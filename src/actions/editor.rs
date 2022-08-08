@@ -3,7 +3,7 @@ use std::io::{stdout, Write, Stdout};
 
 //extra crate
 use crossterm::event::{KeyEvent, read, KeyModifiers, KeyCode};
-use crossterm::{terminal ,QueueableCommand, Result, cursor, style::Print};
+use crossterm::{terminal ,QueueableCommand, Result, cursor, };
 use errno::errno;
 use crossterm::event::Event::Key;
 
@@ -20,7 +20,7 @@ impl Editor {
         })
     }
     pub fn start(&mut self) -> Result<()> {
-        terminal::enable_raw_mode();
+        terminal::enable_raw_mode()?;
         loop {
             if self.enter_alt_screen().is_err() {
                 self.die("was not able to enter alternate screen");
@@ -29,28 +29,24 @@ impl Editor {
                 break;
             }
         }
-        terminal::disable_raw_mode();
+        terminal::disable_raw_mode()?;
         Ok(())
     }
 
-    pub fn clear_screen_now(&self, stdout: &mut Stdout) -> Result<()> {
-        stdout
-            .queue(terminal::Clear(terminal::ClearType::All))?
-            .queue(cursor::MoveTo(0,0))?
-            .flush()
-    }
+   
 
     pub fn enter_alt_screen(&mut self) -> Result<()> {
         let mut stdout = stdout();
         
-        self.clear_screen_now(&mut stdout);
+        self.screen.clear(&mut stdout)?;
         self.screen.draw_row()?;
         stdout.queue(cursor::MoveTo(0,0))?.flush()
+        
     }
 
     pub fn die<S: Into<String>>(&mut self, message: S) {
         let mut stdout = stdout();
-        let _ = self.clear_screen_now(&mut stdout);
+        let _ = self.screen.clear(&mut stdout);
         let _ = terminal::disable_raw_mode();
         eprintln!("{} {}", message.into(), errno());
         std::process::exit(1);
