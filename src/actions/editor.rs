@@ -35,8 +35,7 @@ impl Editor {
 
    
     pub fn refresh(&mut self) -> Result<()> {
-        self.screen.clear()?;
-        self.screen.draw_row()
+        self.screen.refresh_screen()
     }
 
     pub fn die<S: Into<String>>(&mut self, message: S) {

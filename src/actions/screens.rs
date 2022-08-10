@@ -27,7 +27,6 @@ impl Screen {
             self.stdout
                 .queue(cursor::MoveTo(0, row))?
                 .queue(Print("~".to_string()))?;
-
         }
         Ok(())
     }
@@ -36,8 +35,14 @@ impl Screen {
     pub fn clear(&mut self)  -> Result<()> {
         self.stdout
             .queue(terminal::Clear(terminal::ClearType::All))?
-            .queue(cursor::MoveTo(0,0))?
             .flush()?;
         Ok(())
+    } 
+
+    pub fn refresh_screen(& mut self) -> Result<()> {
+
+        self.clear()?;
+        self.draw_row()?;
+        self.stdout.queue(cursor::MoveTo(0, 0))?.flush()
     } 
 }
